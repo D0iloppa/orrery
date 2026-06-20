@@ -34,6 +34,12 @@ export default function RenderView() {
   // mount 1회만 파싱 (쿼리는 고정)
   const input = useMemo(() => parseBirthInput(params), [])
 
+  // 캡처는 기본 다크(CRT 콘솔 배경에 맞춤). theme=light 면 라이트.
+  const light = params.get('theme') === 'light'
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', !light)
+  }, [light])
+
   // 차트 콘텐츠(table/svg)가 그려지면 html[data-orrery-ready] 를 세워
   // playwright 가 캡처 타이밍을 결정적으로 잡게 한다. natal 은 async 라 폴링.
   useEffect(() => {
@@ -59,7 +65,7 @@ export default function RenderView() {
   }
 
   return (
-    <div id="orrery-render" className="max-w-2xl mx-auto px-4 py-6 bg-white text-gray-900">
+    <div id="orrery-render" className="max-w-2xl mx-auto px-4 py-6 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
       {tab === 'ziwei' && <ZiweiView input={input} />}
       {tab === 'natal' && <NatalView input={input} />}
       {tab !== 'ziwei' && tab !== 'natal' && <SajuView input={input} />}
